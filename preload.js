@@ -14,4 +14,5 @@ contextBridge.exposeInMainWorld('api', {
   readClipboard: () => ipcRenderer.invoke('read-clipboard'),
   writeClipboard: (dataURL, marker) => ipcRenderer.invoke('write-clipboard', dataURL, marker),
   savePng: (dataURL) => ipcRenderer.invoke('save-png', dataURL),
+  getVersion: () => ipcRenderer.invoke('app-version'),
 });

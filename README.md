@@ -2,6 +2,8 @@
 
 <h1 align="center">FunDraw</h1>
 
+<p align="center">Version 1.0.0</p>
+
 A fast, simple notebook for sketching ideas by hand with a pen tablet.
 FunDraw has an infinite canvas, supports pen pressure, and lets you paste images from anywhere.
 
@@ -30,6 +32,12 @@ npm start      # run the app
 npm run icon   # rebuild the icons from assets/icon.svg
 npm run dist   # build the MSI installer into dist/
 ```
+
+## Releases
+
+Every push to `master` runs GitHub Actions. The workflow builds the MSI, tags the commit and publishes a GitHub release with the installer attached.
+Each release is versioned automatically: it takes the newest `v*` tag and adds 1 to the last number (1.0.0, 1.0.1, 1.0.2, …).
+To start a new minor or major version, tag a commit yourself, for example `git tag v1.1.0`, and push the tag.
 
 ## Shortcuts
 

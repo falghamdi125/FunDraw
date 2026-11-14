@@ -133,6 +133,8 @@ ipcMain.handle('set-learn-mode', (_e, on) => {
   return learnMode;
 });
 
+ipcMain.handle('app-version', () => app.getVersion());
+
 ipcMain.handle('set-opacity', (_e, value) => {
   if (win) win.setOpacity(value);
 });

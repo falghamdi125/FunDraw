@@ -421,3 +421,5 @@ body.v2 .quick-row .qv { display: inline-flex; }
 /* scene canvas is moved/scaled by the GPU while panning and zooming */
 .scene { position: fixed; top: 52px; left: 0; display: block; transform-origin: 0 0; will-change: transform; z-index: 0; pointer-events: none; }
 .scene.back { visibility: hidden; }
+
+.app-version { padding: 4px 8px 6px; font-size: 11px; color: var(--muted); text-align: center; }

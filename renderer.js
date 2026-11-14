@@ -2176,6 +2176,7 @@ async function init() {
   setLines(state.lines);
   setSmooth(state.smooth);
   setTool(state.tool);
+  window.api.getVersion().then((v) => { document.getElementById('appVersion').textContent = 'FunDraw ' + v; });
   fitToolbar();
   fitPanel();
   clearTimeout(saveTimer); // nothing changed yet
