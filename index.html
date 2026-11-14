@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'">
+  <title>FunDraw</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+      <symbol id="i-eraser" viewBox="0 0 24 24"><path d="m7 21-4.3-4.3a1 1 0 0 1 0-1.4l10-10a1 1 0 0 1 1.4 0l5.6 5.6a1 1 0 0 1 0 1.4L11 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></symbol>
+      <symbol id="i-highlighter" viewBox="0 0 24 24"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></symbol>
+      <symbol id="i-lasso" viewBox="0 0 24 24"><path d="M7 22a5 5 0 0 1-2-4"/><path d="M3.3 14A6.8 6.8 0 0 1 2 10c0-4.4 4.5-8 10-8s10 3.6 10 8a7 7 0 0 1-.3 2"/><path d="M7 16.9c1 .4 2 .7 3 .9"/><circle cx="5" cy="16" r="2"/><path d="m14 12 7.5 6h-4.5l-2.6 3.9Z"/></symbol>
+      <symbol id="i-hand" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-6-2.3l-3.6-3.6a2 2 0 0 1 2.8-2.8L7 15"/></symbol>
+      <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+      <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+      <symbol id="i-redo" viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></symbol>
+      <symbol id="i-learn" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 14h18"/><path d="M7 17h4"/></symbol>
+      <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M4 16V5a1 1 0 0 1 1-1h11"/></symbol>
+      <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+      <symbol id="i-board" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M2 6h4M2 10h4M2 14h4M2 18h4"/><path d="M10 8h5"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-crop" viewBox="0 0 24 24"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></symbol>
+      <symbol id="i-opacity" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18Z" fill="currentColor"/></symbol>
+      <symbol id="i-focus" viewBox="0 0 24 24"><path d="M3 8V5a2 2 0 0 1 2-2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    </defs>
+  </svg>
+
+  <header id="toolbar">
+    <div class="group">
+      <button id="undo" class="ib" data-tip="Undo · Ctrl+Z"><svg><use href="#i-undo"/></svg></button>
+      <button id="redo" class="ib hide-l4" data-tip="Redo · Ctrl+Y"><svg><use href="#i-redo"/></svg></button>
+      <button id="paste" class="ib hide-l2" data-tip="Paste image · Ctrl+V"><svg><use href="#i-image"/></svg></button>
+    </div>
+
+    <div class="drag-space"></div>
+    <button id="boardBtn" class="board-btn hide-l5" data-tip="Boards · B"><svg class="board-icon"><use href="#i-board"/></svg><span id="boardName">Board</span><svg class="chev"><use href="#i-chevron"/></svg></button>
+    <div class="drag-space hide-l5"></div>
+
+    <div class="group">
+      <button id="zoom" class="text-btn hide-l1" data-tip="Reset zoom · Ctrl+0">100%</button>
+      <button id="theme" class="ib hide-l4" data-tip="Dark mode · D"><svg><use href="#i-moon"/></svg></button>
+      <button id="learn" class="pill hide-l5" data-tip="Learn mode: narrow strip on top · L"><svg><use href="#i-learn"/></svg><span class="label">Learn</span></button>
+      <button id="moreBtn" class="ib" data-tip="More"><svg><use href="#i-more"/></svg></button>
+    </div>
+  </header>
+
+  <!-- Floating drawing panel on the left -->
+  <div id="dock">
+    <div id="panel">
+      <div class="seg" id="tools">
+        <button data-tool="pen" class="ib" data-tip="Pen · P"><svg><use href="#i-pen"/></svg></button>
+        <button data-tool="highlighter" class="ib hide-v2" data-tip="Highlighter · I"><svg><use href="#i-highlighter"/></svg></button>
+        <button data-tool="eraser" class="ib" data-tip="Eraser · E"><svg><use href="#i-eraser"/></svg></button>
+        <button data-tool="select" class="ib" data-tip="Lasso select · V"><svg><use href="#i-lasso"/></svg></button>
+        <button data-tool="pan" class="ib hide-v2" data-tip="Pan · H or hold Space"><svg><use href="#i-hand"/></svg></button>
+      </div>
+      <div class="sep wide-v"></div>
+      <div class="group wide-v" id="colors"></div>
+      <div class="sep wide-v"></div>
+      <div class="seg wide-v" id="sizes"></div>
+      <div class="sep narrow-v"></div>
+      <div class="group narrow-v">
+        <button id="styleBtn" class="ib" data-tip="Color &amp; size"><span class="dot" id="styleDot"></span></button>
+      </div>
+      <div class="sep"></div>
+      <button id="centerBtn" class="ib" data-tip="Center my drawings · Home"><svg><use href="#i-focus"/></svg></button>
+    </div>
+  </div>
+
+  <div id="stylePop" class="popover" hidden>
+    <div class="pop-title">Color</div>
+    <div class="group" id="colors2"></div>
+    <div class="pop-title">Size</div>
+    <div class="seg" id="sizes2"></div>
+  </div>
+
+  <div id="boardPop" class="popover" hidden>
+    <div class="pop-title">Boards</div>
+    <div id="boardList"></div>
+    <div class="menu-sep"></div>
+    <button class="menu-item" id="newBoardBtn"><svg><use href="#i-plus"/></svg><span>New board</span><kbd>Ctrl+N</kbd></button>
+  </div>
+
+  <div id="morePop" class="popover" hidden>
+    <div class="quick-row">
+      <button class="ib q4" id="qRedo" data-tip="Redo · Ctrl+Y"><svg><use href="#i-redo"/></svg></button>
+      <button class="ib q2" id="qPaste" data-tip="Paste image · Ctrl+V"><svg><use href="#i-image"/></svg></button>
+      <button class="ib qv" id="qHighlighter" data-tip="Highlighter · I"><svg><use href="#i-highlighter"/></svg></button>
+      <button class="ib qv" id="qPan" data-tip="Pan · H"><svg><use href="#i-hand"/></svg></button>
+      <button class="ib q5" id="qBoard" data-tip="Boards · B"><svg><use href="#i-board"/></svg></button>
+      <button class="ib q4" id="qTheme" data-tip="Dark mode · D"><svg><use href="#i-moon"/></svg></button>
+      <button class="pill q5" id="qLearn" data-tip="Learn mode · L"><svg><use href="#i-learn"/></svg><span>Learn</span></button>
+    </div>
+    <div class="menu-sep quick-sep"></div>
+    <div class="menu-row">
+      <span>Grid <kbd>G</kbd></span>
+      <div class="seg" id="gridItem">
+        <button class="text-seg" data-level="0">Off</button>
+        <button class="text-seg" data-level="0.05">5%</button>
+        <button class="text-seg" data-level="0.1">10%</button>
+      </div>
+    </div>
+    <div class="menu-row">
+      <span>Lines <kbd>Shift+G</kbd></span>
+      <div class="seg" id="linesItem">
+        <button class="text-seg" data-level="0">Off</button>
+        <button class="text-seg" data-level="0.05">5%</button>
+        <button class="text-seg" data-level="0.1">10%</button>
+      </div>
+    </div>
+    <div class="menu-row">
+      <span>Smoothing</span>
+      <div class="seg" id="smoothItem">
+        <button class="text-seg" data-level="0">Off</button>
+        <button class="text-seg" data-level="1">Low</button>
+        <button class="text-seg" data-level="2">High</button>
+      </div>
+    </div>
+    <button class="menu-item" id="invertItem"><span>Invert images in dark mode</span><svg class="check"><use href="#i-check"/></svg></button>
+    <div class="menu-row">
+      <span>Window opacity</span>
+      <input id="opacity" type="range" min="0.35" max="1" step="0.05" value="1">
+    </div>
+    <div class="menu-sep"></div>
+    <button class="menu-item" id="fitItem"><span>Center my drawings</span><kbd>Home</kbd></button>
+    <button class="menu-item" id="exportItem"><span>Export as PNG</span><kbd>Ctrl+S</kbd></button>
+    <button class="menu-item" id="clearItem"><span>Clear canvas</span><kbd>undo-able</kbd></button>
+    <div class="menu-sep"></div>
+    <div class="shortcuts">
+      <div><kbd>1</kbd>–<kbd>6</kbd> colors</div>
+      <div><kbd>[</kbd> <kbd>]</kbd> pen size</div>
+      <div><kbd>Space</kbd> drag to pan</div>
+      <div><kbd>Ctrl</kbd> drag to move</div>
+      <div><kbd>Shift</kbd> straight line</div>
+      <div>Hold pen still: line / shape</div>
+      <div><kbd>Ctrl+C</kbd> copy as image</div>
+      <div><kbd>Ctrl+D</kbd> duplicate</div>
+      <div><kbd>Ctrl+A</kbd> select all</div>
+      <div><kbd>Del</kbd> delete selection</div>
+    </div>
+  </div>
+
+  <div id="selbar" hidden>
+    <div class="group sel-colors" id="selColors"></div>
+    <div class="sep sel-colors"></div>
+    <button class="ib img-only" id="selCrop" data-tip="Crop image · double-click"><svg><use href="#i-crop"/></svg></button>
+    <button class="ib img-only" id="selOpacity" data-tip="Image opacity: 100 / 60 / 30%"><svg><use href="#i-opacity"/></svg></button>
+    <div class="sep img-only"></div>
+    <button class="ib" id="selDup" data-tip="Duplicate · Ctrl+D"><svg><use href="#i-copy"/></svg></button>
+    <button class="ib" id="selCopy" data-tip="Copy as image · Ctrl+C"><svg><use href="#i-clipboard"/></svg></button>
+    <button class="ib" id="selDel" data-tip="Delete · Del"><svg><use href="#i-trash"/></svg></button>
+  </div>
+
+  <button id="findBtn" hidden><svg><use href="#i-focus"/></svg><span>Show my drawing</span></button>
+
+  <div id="tip" hidden></div>
+  <canvas id="board" class="scene"></canvas>
+  <canvas id="board2" class="scene back"></canvas>
+  <canvas id="overlay"></canvas>
+  <div id="hint">Paste an image with Ctrl+V · Pinch to zoom · Two-finger scroll to pan</div>
+  <script src="renderer.js"></script>
+</body>
+</html>

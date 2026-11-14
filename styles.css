@@ -1,0 +1,423 @@
+:root {
+  --bg: #ffffff;
+  --bar: #f7f7f9;
+  --fg: #1f2328;
+  --muted: #6b7280;
+  --hover: rgba(0, 0, 0, 0.06);
+  --seg: rgba(0, 0, 0, 0.05);
+  --active: #ffffff;
+  --active-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --accent: #3d6bff;
+  --accent-soft: rgba(61, 107, 255, 0.12);
+  --border: rgba(0, 0, 0, 0.09);
+  --pop: #ffffff;
+  --pop-shadow: 0 8px 28px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+body.dark {
+  --bg: #16171b;
+  --bar: #1e1f24;
+  --fg: #e8e8ea;
+  --muted: #9a9ca5;
+  --hover: rgba(255, 255, 255, 0.07);
+  --seg: rgba(255, 255, 255, 0.06);
+  --active: #3a3c45;
+  --active-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --accent: #7095ff;
+  --accent-soft: rgba(112, 149, 255, 0.18);
+  --border: rgba(255, 255, 255, 0.08);
+  --pop: #26282e;
+  --pop-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  user-select: none;
+}
+
+/* ---------- Toolbar ---------- */
+#toolbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 150px 0 10px; /* right side reserved for window buttons */
+  background: var(--bar);
+  border-bottom: 1px solid var(--border);
+  -webkit-app-region: drag;
+  z-index: 10;
+}
+#toolbar > *:not(.drag-space) { -webkit-app-region: no-drag; }
+.drag-space { flex: 1; align-self: stretch; min-width: 12px; }
+.group { display: flex; align-items: center; gap: 2px; }
+.sep { width: 1px; height: 24px; background: var(--border); margin: 0 4px; flex: none; }
+
+button {
+  font: inherit;
+  color: var(--fg);
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s, box-shadow 0.12s;
+}
+button:hover { background: var(--hover); }
+button:disabled { opacity: 0.35; cursor: default; background: transparent; }
+
+.ib { width: 38px; height: 38px; padding: 0; }
+.ib svg, .pill svg, .menu-item svg {
+  width: 20px; height: 20px;
+  fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+#moreBtn svg { fill: currentColor; stroke: none; }
+
+/* Segmented controls (tools, sizes) */
+.seg {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: var(--seg);
+  border-radius: 9px;
+}
+.seg .ib { width: 36px; height: 34px; }
+.seg button.active {
+  background: var(--active);
+  box-shadow: var(--active-shadow);
+  color: var(--accent);
+}
+
+/* Color swatches */
+.swatch {
+  width: 30px; height: 30px; padding: 0;
+  border-radius: 50%;
+}
+.swatch::before {
+  content: "";
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.35);
+  transition: transform 0.12s;
+}
+.swatch.active { box-shadow: 0 0 0 2px var(--c); background: transparent; }
+.swatch.active::before { transform: scale(0.85); }
+
+/* Size presets */
+.size-btn span {
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Narrow-mode style button */
+.dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.35);
+}
+
+.text-btn {
+  height: 34px; min-width: 58px; padding: 0 10px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.pill {
+  height: 36px;
+  padding: 0 14px 0 12px;
+  gap: 8px;
+  border-radius: 18px;
+  background: var(--seg);
+  font-weight: 600;
+}
+.pill.active { background: var(--accent); color: #fff; }
+.pill.active:hover { background: var(--accent); filter: brightness(1.08); }
+#theme.active, #moreBtn.active, #styleBtn.active { background: var(--hover); }
+
+/* Responsive toolbar. renderer.js measures the toolbar and adds body.l1 … body.l6
+   one at a time until everything fits:
+   l1: zoom label, board name and Learn label hide
+   l2: colors & sizes fold into one button, paste moves to the ⋯ menu
+   l3: compact button sizes
+   l4: pan, redo and theme move to the ⋯ menu
+   l5: boards and learn move to the ⋯ menu
+   l6: highlighter moves to the ⋯ menu
+   Pen, eraser, lasso, color and undo always stay on the toolbar. */
+#toolbar > * { flex-shrink: 0; }
+#toolbar > .drag-space { flex-shrink: 1; }
+.narrow-only { display: none; }
+body.l1 .hide-l1 { display: none !important; }
+body.l1 .pill .label { display: none; }
+body.l1 .pill { padding: 0 9px; }
+body.l1 .board-btn span, body.l1 .board-btn .chev { display: none; }
+body.l2 .wide-only { display: none !important; }
+body.l2 .narrow-only { display: flex; }
+body.l2 .hide-l2 { display: none !important; }
+body.l3 .hide-l3 { display: none !important; }
+body.l4 .hide-l4 { display: none !important; }
+body.l5 .hide-l5 { display: none !important; }
+body.l6 .hide-l6 { display: none !important; }
+body.l3 #toolbar { gap: 2px; padding-left: 5px; padding-right: 140px; }
+body.l3 #toolbar .ib { width: 34px; height: 34px; }
+body.l3 #toolbar .seg .ib { width: 31px; height: 32px; }
+body.l3 #toolbar .sep { margin: 0 2px; }
+body.l3 .drag-space { min-width: 4px; }
+
+/* The quick row at the top of the ⋯ menu holds whatever the toolbar had to hide */
+.quick-row { display: none; flex-wrap: wrap; gap: 2px; padding: 2px 2px 4px; }
+.quick-sep { display: none; }
+body.l2 .quick-row { display: flex; }
+body.l2 .quick-sep { display: block; }
+.quick-row .q4, .quick-row .q5, .quick-row .q6 { display: none; }
+body.l4 .quick-row .q4 { display: inline-flex; }
+body.l5 .quick-row .q5 { display: inline-flex; }
+body.l6 .quick-row .q6 { display: inline-flex; }
+.quick-row .ib svg { width: 19px; height: 19px; }
+.quick-row .ib.active { background: var(--accent-soft); color: var(--accent); }
+.quick-row .pill { height: 38px; }
+#hint { max-width: calc(100vw - 24px); overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- Popovers ---------- */
+.popover {
+  position: fixed;
+  z-index: 20;
+  min-width: 200px;
+  max-height: calc(100vh - 52px);
+  overflow-y: auto;
+  padding: 6px;
+  background: var(--pop);
+  border-radius: 10px;
+  box-shadow: var(--pop-shadow);
+  animation: pop-in 0.12s ease-out;
+}
+.popover[hidden] { display: none; }
+@keyframes pop-in { from { opacity: 0; transform: translateY(-4px); } }
+.pop-title { font-size: 11px; color: var(--muted); padding: 6px 6px 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+#stylePop .group, #stylePop .seg { margin: 0 4px 6px; }
+
+.menu-item {
+  width: 100%;
+  justify-content: flex-start;
+  gap: 8px;
+  height: 32px;
+  padding: 0 8px;
+  text-align: left;
+}
+.menu-item span { flex: 1; }
+.menu-item .check { visibility: hidden; color: var(--accent); }
+.menu-item.on .check { visibility: visible; }
+.menu-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 34px; padding: 0 8px; }
+.menu-row input { width: 100px; accent-color: var(--accent); }
+.text-seg { height: 24px; padding: 0 8px; font-size: 12px; }
+.menu-sep { height: 1px; background: var(--border); margin: 4px 2px; }
+kbd {
+  font: 11px "Cascadia Mono", Consolas, monospace;
+  color: var(--muted);
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--seg);
+}
+.shortcuts { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; padding: 4px 8px 6px; font-size: 12px; color: var(--muted); }
+
+/* ---------- Tooltip ---------- */
+#tip {
+  position: fixed;
+  z-index: 30;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #111318;
+  color: #f2f2f2;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+#tip[hidden] { display: none; }
+
+/* ---------- Canvas ---------- */
+#board {
+  position: fixed;
+  top: 52px; left: 0;
+  touch-action: none;
+  display: block;
+}
+
+#hint {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: var(--pop);
+  box-shadow: var(--pop-shadow);
+  color: var(--muted);
+  font-size: 12px;
+  pointer-events: none;
+  transition: opacity 0.4s;
+  white-space: nowrap;
+}
+#hint.hidden { opacity: 0; }
+body.learn #hint { display: none; }
+
+#morePop { width: 320px; }
+#morePop .menu-item span { white-space: nowrap; }
+.shortcuts > div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- Floating selection bar ---------- */
+#selbar {
+  position: fixed;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: var(--pop);
+  border-radius: 12px;
+  box-shadow: var(--pop-shadow);
+}
+#selbar[hidden] { display: none; }
+#selbar .ib { width: 34px; height: 34px; }
+#selbar .ib svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+#selDel:hover { color: #e5484d; }
+#selbar.no-strokes .sel-colors { display: none; }
+.swatch.small { width: 26px; height: 26px; }
+.swatch.small::before { width: 15px; height: 15px; }
+
+/* ---------- Board switcher ---------- */
+.board-btn {
+  height: 34px;
+  max-width: 260px;
+  min-width: 0;
+  padding: 0 8px 0 10px;
+  gap: 6px;
+  font-weight: 600;
+  flex-shrink: 1;
+}
+.board-btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.board-btn svg { flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.board-btn .board-icon { width: 17px; height: 17px; color: var(--muted); }
+.board-btn .chev { width: 14px; height: 14px; color: var(--muted); }
+.board-btn.active { background: var(--hover); }
+
+
+#boardPop { width: 300px; }
+#boardList { max-height: 50vh; overflow-y: auto; }
+.board-row { display: flex; align-items: center; gap: 2px; border-radius: 8px; }
+.board-row:hover { background: var(--hover); }
+.board-row.current { background: var(--accent-soft); }
+.board-open {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 8px;
+  justify-content: space-between;
+  gap: 10px;
+  background: transparent !important;
+}
+.board-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.board-row.current .board-title { font-weight: 600; color: var(--accent); }
+.board-time { font-size: 11px; color: var(--muted); flex: none; }
+.ib.mini { width: 28px; height: 28px; visibility: hidden; }
+.ib.mini svg { width: 15px; height: 15px; }
+.board-row:hover .ib.mini { visibility: visible; }
+.board-row [data-act=delete]:hover { color: #e5484d; }
+.board-input {
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  margin: 3px 4px;
+  padding: 0 8px;
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1.5px solid var(--accent);
+  border-radius: 6px;
+  outline: none;
+  user-select: text;
+}
+
+/* ---------- Floating drawing panel (left) ---------- */
+#dock {
+  position: fixed;
+  top: 52px;
+  bottom: 0;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  pointer-events: none; /* only the panel itself takes clicks */
+  z-index: 6;
+}
+#panel {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: var(--pop);
+  border-radius: 14px;
+  box-shadow: var(--pop-shadow);
+}
+#panel .seg, #panel .group { flex-direction: column; }
+#panel .seg .ib { width: 36px; height: 36px; }
+#panel .sep { width: 24px; height: 1px; margin: 3px 0; }
+#panel .swatch { width: 32px; height: 30px; }
+
+/* Short windows (e.g. learn mode): renderer.js adds body.v1 … body.v3 until the panel fits
+   v1: colors & sizes fold into one button   v2: highlighter and pan move to the ⋯ menu
+   v3: compact buttons */
+.narrow-v { display: none !important; }
+body.v1 .wide-v { display: none !important; }
+body.v1 .narrow-v { display: flex !important; }
+body.v1 #panel .sep.narrow-v { display: block !important; }
+body.v2 .hide-v2 { display: none !important; }
+body.v3 #panel { padding: 4px; gap: 2px; border-radius: 12px; }
+body.v3 #panel .seg .ib, body.v3 #panel .ib { width: 32px; height: 30px; }
+body.v3 #panel .sep { margin: 2px 0; }
+
+.quick-row .qv { display: none; }
+body.v2 .quick-row { display: flex; }
+body.v2 .quick-sep { display: block; }
+body.v2 .quick-row .qv { display: inline-flex; }
+
+#stylePop .seg { width: fit-content; }
+
+#selbar .img-only { display: none; }
+#selbar.single-image .img-only { display: inline-flex; }
+#selbar.single-image .sep.img-only { display: block; }
+
+/* "Show my drawing" pill */
+#findBtn {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  height: 38px;
+  padding: 0 16px 0 12px;
+  gap: 8px;
+  border-radius: 19px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(61, 107, 255, 0.35);
+  animation: pop-in 0.15s ease-out;
+}
+#findBtn:hover { background: var(--accent); filter: brightness(1.08); }
+#findBtn[hidden] { display: none; }
+#findBtn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* live layer above the scene: never takes pointer events */
+#overlay { position: fixed; top: 52px; left: 0; display: block; z-index: 1; touch-action: none; }
+
+/* scene canvas is moved/scaled by the GPU while panning and zooming */
+.scene { position: fixed; top: 52px; left: 0; display: block; transform-origin: 0 0; will-change: transform; z-index: 0; pointer-events: none; }
+.scene.back { visibility: hidden; }
